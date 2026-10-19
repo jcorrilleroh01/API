@@ -30,8 +30,10 @@ El usuario introduce los datos de su maleta y la API responde si puede volar, si
 He montado la app en Render.
 - Primero he publicado en un repositorio publico la app entera
 - Render analiza y coge los archivos del repositorio
-- 
-Abre `https://api-64fr.onrender.com/` para probar la API.
+- Le indicas el comando apra inicializar la app, en mi caso ha sido este:
+`uvicorn app:app --host 0.0.0.0 --port $PORT`
+- Render monta la app y cuando ha acabado te proporciona el enlace
+- Abre `https://api-64fr.onrender.com/` para probar la API.
 
 ## Estructura
 
@@ -43,3 +45,5 @@ static/
   styles.css     → estilos y animaciones
   app.js         → lógica del front y llamada a la API
 ```
+## Previsualizacion
+![Previsualizacion](previsualizar.gif)
