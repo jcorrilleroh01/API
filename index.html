@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de equipaje</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Cartel tipo panel de salidas -->
+  <header class="board">
+    <div class="board__inner">
+      <h1 class="board__title" id="titulo" data-text="CONTROL DE EQUIPAJE">Control de equipaje</h1>
+      <p class="board__sub">Comprueba si tu maleta cumple las normas de la aerolínea antes de ir al aeropuerto.</p>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- Formulario -->
+    <form class="panel" id="form" novalidate>
+      <h2 class="panel__title">Datos del viajero y la maleta</h2>
+
+      <div class="field" id="field-nombre">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" type="text" maxlength="50" autocomplete="name" placeholder="Como aparece en tu billete">
+        <p class="field__error" id="error-nombre" aria-live="polite"></p>
+      </div>
+
+      <fieldset class="group">
+        <legend>Aerolínea</legend>
+        <div class="segmented">
+          <input type="radio" name="aerolinea" id="a-iberia" value="Iberia" checked>
+          <label for="a-iberia">Iberia</label>
+          <input type="radio" name="aerolinea" id="a-ryanair" value="Ryanair">
+          <label for="a-ryanair">Ryanair</label>
+          <input type="radio" name="aerolinea" id="a-vueling" value="Vueling">
+          <label for="a-vueling">Vueling</label>
+          <span class="segmented__pill" aria-hidden="true"></span>
+        </div>
+      </fieldset>
+
+      <fieldset class="group">
+        <legend>Tipo de maleta</legend>
+        <div class="options">
+          <input type="radio" name="tipo_maleta" id="t-mano" value="mano" checked>
+          <label for="t-mano" class="option">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="5" y="8" width="14" height="12" rx="2.5"/>
+              <path d="M9 8V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V8"/>
+              <path d="M9 12v4M15 12v4"/>
+            </svg>
+            <span><strong>De mano</strong><small>Viaja contigo en cabina</small></span>
+          </label>
+          <input type="radio" name="tipo_maleta" id="t-bodega" value="bodega">
+          <label for="t-bodega" class="option">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M10 6V3h4v3"/>
+              <rect x="6" y="6" width="12" height="13" rx="2.5"/>
+              <path d="M10 10v5M14 10v5"/>
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="15" cy="21" r="1"/>
+            </svg>
+            <span><strong>Facturada</strong><small>Viaja en la bodega</small></span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="range">
+        <div class="range__head">
+          <label for="peso">Peso</label>
+          <output for="peso" id="peso-out">8 kg</output>
+        </div>
+        <input type="range" id="peso" name="peso_kg" min="0.5" max="50" step="0.5" value="8">
+      </div>
+
+      <div class="range">
+        <div class="range__head">
+          <label for="medidas">Medidas <span class="muted">alto + ancho + largo</span></label>
+          <output for="medidas" id="medidas-out">100 cm</output>
+        </div>
+        <input type="range" id="medidas" name="medidas" min="1" max="300" step="1" value="100">
+      </div>
+
+      <div class="toggles">
+        <label class="toggle">
+          <input type="checkbox" id="liquidos" name="liquidos">
+          <span class="toggle__track" aria-hidden="true"><span class="toggle__thumb"></span></span>
+          <span>Líquidos de más de 100 ml</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="bateria" name="bateria">
+          <span class="toggle__track" aria-hidden="true"><span class="toggle__thumb"></span></span>
+          <span>Baterías de litio</span>
+        </label>
+      </div>
+
+      <button class="btn" type="submit" id="btn">Escanear maleta</button>
+    </form>
+
+    <!-- Escáner de rayos X -->
+    <section class="monitor-wrap" aria-labelledby="monitor-title">
+      <h2 class="visually-hidden" id="monitor-title">Escáner de rayos X</h2>
+      <div class="monitor" id="monitor">
+        <div class="hud">
+          <span>Peso <b id="hud-peso">8 kg</b></span>
+          <span>Medidas <b id="hud-medidas">100 cm</b></span>
+        </div>
+
+        <div class="bag" id="bag">
+          <svg class="bag__svg" viewBox="0 0 160 200" aria-hidden="true">
+            <g class="bag__inner">
+              <g class="metal trolley">
+                <rect x="58" y="4" width="6" height="46" rx="3"/>
+                <rect x="96" y="4" width="6" height="46" rx="3"/>
+                <rect x="54" y="2" width="52" height="9" rx="4.5"/>
+              </g>
+              <path class="metal carry" d="M60 50 V38 a10 10 0 0 1 10 -10 h20 a10 10 0 0 1 10 10 V50" stroke-width="7" stroke-linecap="round"/>
+              <rect class="shell" x="16" y="48" width="128" height="132" rx="18"/>
+              <g class="ribs">
+                <rect x="52" y="60" width="5" height="108" rx="2.5"/>
+                <rect x="103" y="60" width="5" height="108" rx="2.5"/>
+              </g>
+              <g class="organic">
+                <path d="M28 132 q20 -18 46 -6 q18 8 30 -2 q16 -10 28 4 v40 h-104z"/>
+                <ellipse cx="50" cy="86" rx="20" ry="12"/>
+              </g>
+              <g class="item item--liquid">
+                <rect x="96" y="76" width="26" height="44" rx="6"/>
+                <rect x="103" y="66" width="12" height="12" rx="2"/>
+              </g>
+              <g class="item item--battery">
+                <rect x="34" y="104" width="44" height="22" rx="4"/>
+                <rect x="78" y="110" width="5" height="10" rx="1.5"/>
+                <path d="M58 107 l-7 9 h7 l-4 8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+              <g class="metal wheels">
+                <circle cx="40" cy="188" r="9"/>
+                <circle cx="120" cy="188" r="9"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <div class="belt" aria-hidden="true"></div>
+        <div class="beam" aria-hidden="true"></div>
+      </div>
+      <p class="status" id="status" aria-live="polite">Ajusta los datos y mira tu maleta en el escáner.</p>
+    </section>
+  </main>
+
+  <!-- Tarjeta con el resultado -->
+  <div class="modal" id="modal" hidden>
+    <div class="pass" id="pass" role="dialog" aria-modal="true" aria-labelledby="pass-nombre">
+      <div class="pass__main">
+        <div class="pass__top">
+          <span class="pass__airline" id="pass-airline"></span>
+          <span class="pass__kind">Tarjeta de equipaje</span>
+        </div>
+        <h3 class="pass__name" id="pass-nombre"></h3>
+        <dl class="pass__grid">
+          <div><dt>Maleta</dt><dd id="pass-tipo"></dd></div>
+          <div><dt>Peso</dt><dd id="pass-peso"></dd></div>
+          <div><dt>Medidas</dt><dd id="pass-medidas"></dd></div>
+          <div><dt>Coste extra</dt><dd id="pass-coste"></dd></div>
+        </dl>
+        <ul class="pass__motivos" id="pass-motivos"></ul>
+        <div class="stamp" id="stamp"></div>
+      </div>
+      <div class="pass__stub">
+        <div class="gauge">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="gauge__bg" cx="60" cy="60" r="52"/>
+            <circle class="gauge__fg" id="gauge" cx="60" cy="60" r="52"/>
+          </svg>
+          <span class="gauge__num"><b id="gauge-num">0</b>%</span>
+        </div>
+        <p class="gauge__label">Probabilidad de volar</p>
+        <div class="barcode" aria-hidden="true"></div>
+        <button class="btn btn--dark" type="button" id="again">Probar otra maleta</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="alert"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
